@@ -224,35 +224,27 @@ class DLList {
   public void addAtPosition(int pos, Object e) {
     Node new_node = new Node(e, null, null);
     
-    if(this.size() == 0)
-    {
+    if(this.size() == 0) {
     	new_node.setNext(new_node);
     	new_node.setPrevious(new_node);
     	head = new_node;
     	tail = new_node;
     }
-    else
-    {
+    else if(pos >= this.size()) {
+      this.addLast(e);
+    }
+    else {
       Node node = head;
-      for(int i=0; i<pos; i++)
-      {
+      for(int i=0; i<pos; i++) {
     	node = node.getNext();
-    	if(node == tail)
-    	{
+    	if(node == tail) {
     	  break;
     	}
       }
-      
-      if(node == head)
-      {
+      if(node == head) {
     	this.addFirst(e);
       }
-      else if(node == tail)
-      {
-    	this.addLast(e);
-      }
-      else
-      {
+      else {
     	new_node.setNext(node);
     	new_node.setPrevious(node.getPrevious());
     	node.getPrevious().setNext(new_node);
@@ -337,7 +329,7 @@ public class impl5 {
 	list.addLast("e");
 	list.addLast("f");
 	
-	list.addAtPosition(4,"koe");
+	list.addAtPosition(6,"koe");
 	//System.out.println(list.removeFromPosition(4));
 	System.out.println("----");
 	
