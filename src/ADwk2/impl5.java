@@ -72,29 +72,6 @@ class DLList {
   }
   
   /**
-   * Copy Constructor:
-   */
-  DLList(DLList old) {
-    head = new Node(old.head);
-    tail = new Node(old.tail);
-    
-    tail.setNext(head);
-    tail.setPrevious(head);
-    head.setPrevious(tail);
-    head.setNext(tail);
-    
-    if(old.head != old.tail)
-    {
-      Node old_node = old.head;
-      while (old_node != old.tail) {
-    	old_node = old_node.getNext();
-    	Node new_node = new Node(old_node);
-    	addLast(new_node.getElement());		
-      }
-    }  
-  }
-  
-  /**
    * @return The element in the head Node of the DLL
    */
   public Object getHead() {
@@ -333,23 +310,14 @@ class DLList {
    * @return A new DLL that contains the elements of the current one in reversed order.
    */
   public DLList reverse() {
-	DLList new_list = new DLList(this);
+	DLList new_list = new DLList();
+	Node current = head;
 	
-	//Node tmp = null;
-	Node current = new_list.head;
-	
-	if(new_list.head == new_list.tail) {
-	  new_list.head = new_list.tail;
-	  new_list.tail = current;
-	  return new_list;
-	}
-	
-	while(current != new_list.tail) {
-	  Node tmp = new Node(current.getNext());
-	  current.setNext(current.getPrevious());
-	  current.setPrevious(tmp);
-	  current = tmp;
-	}
+	do {
+	  new_list.addFirst(current.getElement());
+	  current = current.getNext();
+	} while (current != tail);
+	new_list.addFirst(current.getElement());
 	
     return new_list;
   }
@@ -374,8 +342,8 @@ public class impl5 {
 	System.out.println("----");
 	
 
-	DLList nlist = new DLList(list);
-	//DLList rlist = list.reverse();
+	//DLList nlist = new DLList(list);
+	DLList rlist = list.reverse();
 	
 	while(list.size() != 0)
 	{
@@ -386,20 +354,14 @@ public class impl5 {
 	System.out.println("----");
 
 
-	while(nlist.size() != 0)
+	while(rlist.size() != 0)
 	{
-	  System.out.println(nlist.removeFirst());
+	  System.out.println(rlist.removeFirst());
 	}
 	
 	System.out.println("----");
 	
-//	while(nlist.size() != 0)
-//	{
-//	  System.out.println(rlist.removeFirst());
-//	}
 	
-//	
-//	
 	System.out.println("End");
   }
 }
