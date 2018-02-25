@@ -43,10 +43,15 @@ class DLList {
     }
 
     // This function gets Node p as input and sets the previous variable of the current Node object as p.
-    public void setPrevious(Node p) {
+    public void tmp(Node p) {
       previous = p;
     }
 
+    // This function gets Node p as input and sets the previous variable of the current Node object as p.
+    public void setPrevious(Node p) {
+      previous = p;
+    }
+    
     // This function returns the previous Node
     public Node getPrevious() {
       return previous;
@@ -62,20 +67,33 @@ class DLList {
    * Constructor: initialises the head and tail fields as null
    */
   public DLList() {
-    head = null;
-    tail = null;
-  }
-  
-  public DLList(DLList old) {
-    head = old.tail;
-    tail = old.head;
+    this.head = null;
+    this.tail = null;
   }
   
   /**
    * Copy Constructor:
    */
+  DLList(DLList old) {
+    head = new Node(old.head);
+    tail = new Node(old.tail);
+    
+    tail.setNext(head);
+    tail.setPrevious(head);
+    head.setPrevious(tail);
+    head.setNext(tail);
+    
+    if(old.head != old.tail)
+    {
+      Node old_node = old.head;
+      while (old_node != old.tail) {
+    	old_node = old_node.getNext();
+    	Node new_node = new Node(old_node);
+    	addLast(new_node.getElement());		
+      }
+    }  
+  }
   
-
   /**
    * @return The element in the head Node of the DLL
    */
@@ -123,9 +141,14 @@ class DLList {
    * @return The element of the head Node. If the list is empty, this method returns null.
    */
   public Object removeFirst() {
-    if(this.size() == 0)
-    {
+    if(this.size() == 0) {
   		return null;
+    }
+    else if(head == tail) {
+      Node old_node = new Node(head);
+      head = null;
+      tail = null;
+      return old_node.getElement();
     }
     else
     {
@@ -171,12 +194,16 @@ class DLList {
    * @return The element of the tail Node. If the list is empty, this method returns null.
    */
   public Object removeLast() {
-    if(this.size() == 0)
-    {
+    if(this.size() == 0) {
     	return null;
     }
-    else
-    {
+    else if(head == tail) {
+      Node old_node = new Node(tail);
+      head = null;
+      tail = null;
+      return old_node.getElement();
+    }
+    else {
     	Node old_node = new Node(tail);
     	tail.getPrevious().setNext(head);
     	head.setPrevious(tail.getPrevious());
@@ -189,18 +216,20 @@ class DLList {
    * @return the number of Nodes in the list
    */
   public int size() {
-	Node node = head;
-	int i=0;
-	
-	if(node == null)
-	{
-	  return i;
+	if(head == null) {
+	  return 0;
 	}
-	do {
+	if(head == tail) {
+	  return 1;
+	}
+	
+	Node node = head.getNext();
+	int i=2;
+	
+	while (node != tail) {
 	  node = node.getNext();
 	  i++;
-	} while (node != tail);
-	
+	}
 	return i;
   }
 
@@ -209,7 +238,7 @@ class DLList {
    * The list is zero indexed, so the first element in the list corresponds to position 0.
    * This also means that `addAtPosition(0, e)` has the same effect as `addFirst(e)`.
    * If there is no Node in position pos, this method adds it to the last position.
-   *
+   *current.getNext()
    * @param pos
    *     The position to insert the element at.
    * @param e
@@ -281,17 +310,18 @@ class DLList {
     	  else return null;
     	}
       }
-      
-      if(node == head)
-      {
+      if(head == tail) {
+    	head = null;
+    	tail = null;
+    	return node.getElement();
+      }
+      else if(node == head) {
     	return this.removeFirst();
       }
-      else if(node == tail)
-      {
+      else if(node == tail) {
     	return this.removeLast();
       }
-      else
-      {
+      else {
     	node.getPrevious().setNext(node.getNext());
     	node.getNext().setPrevious(node.getPrevious());
     	return node.getElement();
@@ -304,6 +334,23 @@ class DLList {
    */
   public DLList reverse() {
 	DLList new_list = new DLList(this);
+	
+	//Node tmp = null;
+	Node current = new_list.head;
+	
+	if(new_list.head == new_list.tail) {
+	  new_list.head = new_list.tail;
+	  new_list.tail = current;
+	  return new_list;
+	}
+	
+	while(current != new_list.tail) {
+	  Node tmp = new Node(current.getNext());
+	  current.setNext(current.getPrevious());
+	  current.setPrevious(tmp);
+	  current = tmp;
+	}
+	
     return new_list;
   }
 }
@@ -315,15 +362,20 @@ public class impl5 {
 	
 	DLList list = new DLList();
 	
-	list.addLast(1);
-	list.addLast(2);
-	list.addLast(3);
-	list.addLast(4);
+	list.addLast("a");
+	list.addLast("b");
+	list.addLast("c");
+	list.addLast("d");
+	list.addLast("e");
+	list.addLast("f");
 	
-	//list.addAtPosition(1, 5);
-	System.out.println(list.removeFromPosition(4));
+	list.addAtPosition(4,"koe");
+	//System.out.println(list.removeFromPosition(4));
 	System.out.println("----");
 	
+
+	DLList nlist = new DLList(list);
+	//DLList rlist = list.reverse();
 	
 	while(list.size() != 0)
 	{
@@ -332,14 +384,22 @@ public class impl5 {
 	
 	
 	System.out.println("----");
-	
-	DLList nlist = list.reverse();
+
+
 	while(nlist.size() != 0)
 	{
 	  System.out.println(nlist.removeFirst());
 	}
 	
+	System.out.println("----");
 	
+//	while(nlist.size() != 0)
+//	{
+//	  System.out.println(rlist.removeFirst());
+//	}
+	
+//	
+//	
 	System.out.println("End");
   }
 }
