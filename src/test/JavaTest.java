@@ -1,9 +1,12 @@
 package test;
 
+
 /** 
  * JavaTest Class
  */
 public class JavaTest {
+
+
   
   /**
    * Main
@@ -11,6 +14,11 @@ public class JavaTest {
    */
   public static void main(String [] args) {
     System.out.println("Hello!");
+    
+    testClass tc = new testClass();
+    tc.test1(2);
+    
+    
   }
 }
 
